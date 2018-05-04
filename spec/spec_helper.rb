@@ -1,7 +1,6 @@
 require 'active_support/time'
 require 'bundler/setup'
 require 'rails_rate_limiter'
-require 'byebug'
 
 # Require files from support
 path =

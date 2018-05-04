@@ -56,7 +56,8 @@ module RailsRateLimiter
   def check_rate_limits(strategy, limit, per, pattern, client, block)
     requester = pattern || request.remote_ip
 
-    strategy_class = strategy.classify.constantize
+    strategy_class =
+      "RailsRateLimiter::Strategies::#{strategy.classify}".constantize
     result = strategy_class.new(limit, per, requester, client).run
     return unless result.limit_exceeded?
     # instance_exec is using here because simple block.call executes block in
