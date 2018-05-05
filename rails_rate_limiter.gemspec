@@ -27,5 +27,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'mock_redis'
-  spec.add_development_dependency 'yard-activesupport-concern'
 end

@@ -1,4 +1,3 @@
-require 'active_support/concern'
 require 'active_support/inflector'
 
 require 'rails_rate_limiter/version'
@@ -8,9 +7,11 @@ require 'rails_rate_limiter/error'
 # Provides `rate_limit` callback to limit amount of requests
 # and handle rate limit exceeding
 module RailsRateLimiter
-  extend ActiveSupport::Concern
+  def self.included(base)
+    base.extend ClassMethods
+  end
 
-  class_methods do
+  module ClassMethods
     # Sets callback that handles rate limit exceeding. Additionally to
     # described options supports all the `before_action` options.
     #
