@@ -13,9 +13,13 @@ module RailsRateLimiter
     #
     # == Arguments:
     #
-    #   +&block+      - Executed if rate limit exceded. This argument is mandatory.
+    #   +&block+      - Executed if rate limit exceded.
+    #                   This argument is mandatory.
     #
     # == Options:
+    #
+    #   +strategy+   - Rate limiting strategy.
+    #                  Default value is :sliding_window_log
     #
     #   +limit+      - The number of allowed request per time period.
     #                  Supports lambda and proc. Default value is 100
