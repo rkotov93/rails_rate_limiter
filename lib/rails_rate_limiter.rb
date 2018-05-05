@@ -5,40 +5,37 @@ require 'rails_rate_limiter/version'
 require 'rails_rate_limiter/strategies'
 require 'rails_rate_limiter/error'
 
+# Provides `rate_limit` callback to limit amount of requests
+# and handle rate limit exceeding
 module RailsRateLimiter
   extend ActiveSupport::Concern
 
   class_methods do
-    # Sets callback that checks if rate limit was exceeded.
+    # Sets callback that handles rate limit exceeding. Additionally to
+    # described options supports all the `before_action` options.
     #
-    # == Arguments:
+    # @example Renders text with time left in case of rate limit exceeding.
+    #   rate_limit limit: 100, per: 1.hour, only: :index do |info|
+    #     render plain: "Next request can be done in #{info.time_left} seconds",
+    #            status: :too_many_requests
+    #   end
     #
-    #   +&block+      - Executed if rate limit exceded.
-    #                   This argument is mandatory.
+    # @param [Hash] options
+    # @option options [Symbol] :strategy Rate limiting strategy.
+    #   Default value is :sliding_window_log
+    # @option options [Fixnum, Lambda, Proc] :limit The number of allowed
+    #   requests per time period. Default value is 100
+    # @option options [Fixnum, Lambda, Proc] :per Time period in seconds.
+    #   Default value is 1.hour
+    # @option options [Lambda, Proc] :pattern Can be used if you want to use
+    #   something instead of IP as cache key identifier. For example
+    #   `-> { current_user.id }`. Default value is `request.remote_ip`
+    # @option options [Object] :cient Redis client.
+    #   Uses `Redis.new` if not specified
     #
-    # == Options:
-    #
-    #   +strategy+   - Rate limiting strategy.
-    #                  Default value is :sliding_window_log
-    #
-    #   +limit+      - The number of allowed request per time period.
-    #                  Supports lambda and proc. Default value is 100
-    #   +per+        - Time period in seconds. Supports lambda and proc as well.
-    #                  Default value is 1.hour
-    #   +pattern+    - lambda or proc. Can be used if you want to use something
-    #                  instead of IP as cache key identifier. For example
-    #                  `->current_user.id`. Uses `request.remote_ip` by default.
-    #   +client+     - Redis client. Uses `Redis.new` by default.
-    #
-    # Any option avaiable for `before_action` can be used.
-    #
-    # == Examples:
-    #
-    # rate_limit limit: 100, per: 1.hour, only: :index do |info|
-    #   render plain: I18n.t('rate_limit_exceeded', seconds: info.time_left),
-    #          status: :too_many_requests
-    # end
-    #
+    # @yield [info] Executed if rate limit exceded. This argument is mandatory.
+    # @yieldparam [RailsRateLimiter::Result] Represent information about
+    #   rate limiting
     def rate_limit(options = {}, &block)
       raise Error, 'Handling block was not provided' unless block_given?
 

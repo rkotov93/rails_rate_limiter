@@ -8,6 +8,11 @@ module RailsRateLimiter
 
       attr_reader :limit, :expires_in, :requester_pattern
 
+      # @param limit [Fixnum, Lambda, Proc] The number of allowed
+      #   requests per time period.
+      # @param per [Fixnum, Lambda, Proc] :per Time period in seconds.
+      # @param requester [Lambda, Proc] Identifies request
+      # @param client [Object] Redis client
       def initialize(limit, per, requester, client = nil)
         @limit = limit.respond_to?(:call) ? limit.call : limit
         @expires_in = calculate_expires_in(per)
@@ -28,11 +33,13 @@ module RailsRateLimiter
         @client ||= Redis.new
       end
 
+      # Removes all SORTED SET members that have a score < current_timestamp
       def remove_expired_set_members
-        # remove all SORTED SET members that have a score < current_timestamp
         client.zremrangebyscore(cache_key, '-inf', "(#{current_timestamp}")
       end
 
+      # Adds requests to SORTED SET with expiring_timestamp
+      # and current_timestamp
       def log_request
         expiring_timestamp = current_timestamp + expires_in
         client.zadd(cache_key, expiring_timestamp, current_timestamp)

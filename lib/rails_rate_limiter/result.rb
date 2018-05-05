@@ -1,4 +1,5 @@
 module RailsRateLimiter
+  # Provides results of rate limiting
   class Result
     attr_reader :time_left
 
