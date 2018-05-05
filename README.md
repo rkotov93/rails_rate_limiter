@@ -26,6 +26,8 @@ Add `include RateLimiter` to the controller you want to rate limit. It allows yo
 
 ```ruby
 class Posts < ApplicationController
+  include RailsRateLimiter
+
   rate_limit limit: 100, per: 1.hour, only: :index do |info|
     render plain: I18n.t('rate_limit_exceeded', seconds: info.time_left),
            status: :too_many_requests
