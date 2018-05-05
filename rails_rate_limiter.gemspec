@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email         = %w[rkotov93@gmail.com]
 
   spec.summary       = 'Requests rate limiting library for Ruby on Rails'
-  spec.homepage      = 'TODO: Put your gem\'s website or public repo URL here.'
+  spec.homepage      = 'https://github.com/rkotov93/rails_rate_limiter'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
