@@ -1,6 +1,6 @@
 # RailsRateLimiter
 
-This is a high level rate limiting gem for Ruby on Rails using Redis. It limits amount of requests on controllers level, that allows you to customize rate limiting options using everything that available in your action, e.g. `current_user`.
+This is a high level rate limiting gem for Ruby on Rails using Redis. It limits amount of requests on controller's level, that allows you to customize rate limiting options using everything that available in your action, e.g. `current_user`.
 
 ## Installation
 
@@ -67,7 +67,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rails_rate_limiter.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rkotov93/rails_rate_limiter.
 
 ## License
 
