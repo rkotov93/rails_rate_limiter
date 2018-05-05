@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails_rate_limiter (0.1.0)
+    rails_rate_limiter (0.1.1)
       rails (>= 4.2)
       redis (~> 3.0)
 
@@ -139,6 +139,9 @@ GEM
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
+    yard (0.9.12)
+    yard-activesupport-concern (0.0.1)
+      yard (>= 0.8)
 
 PLATFORMS
   ruby
@@ -150,6 +153,7 @@ DEPENDENCIES
   rails_rate_limiter!
   rake (~> 10.0)
   rspec-rails
+  yard-activesupport-concern
 
 BUNDLED WITH
    1.16.1
