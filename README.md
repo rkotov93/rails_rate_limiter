@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/rails_rate_limiter.svg)](https://badge.fury.io/rb/rails_rate_limiter)
+
 # RailsRateLimiter
 
 This is a high level rate limiting gem for Ruby on Rails using Redis. It limits amount of requests on controller's level, that allows you to customize rate limiting options using everything that available in your action, e.g. `current_user`.
