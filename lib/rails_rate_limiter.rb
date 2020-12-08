@@ -56,7 +56,7 @@ module RailsRateLimiter
   private
 
   def check_rate_limits(strategy, limit, per, pattern, client, block)
-    requester = pattern || request.remote_ip
+    requester = compute_requester_pattern(pattern || request.remote_ip)
 
     strategy_class =
       "RailsRateLimiter::Strategies::#{strategy.classify}".constantize
@@ -65,5 +65,12 @@ module RailsRateLimiter
     # instance_exec is using here because simple block.call executes block in
     # a wrong context that leads to not preventing action execution after render
     instance_exec result, &block
+  end
+
+  def compute_requester_pattern(requester)
+    return "ip_#{requester}" unless requester.respond_to?(:call)
+    # instance_exec is using here because simple block.call executes block in
+    # a wrong context that leads to not preventing action execution after render
+    "custom_#{instance_exec(&requester)}"
   end
 end

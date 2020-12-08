@@ -22,12 +22,16 @@ RSpec.describe FakeController, type: :controller do
       before do
         allow(FakeController).to receive(:before_action)
         allow(RailsRateLimiter::Strategies::SlidingWindowLog)
-          .to receive(:new).and_return(strategy)
+          .to receive(:new).with(123, 56.minutes, 'custom_current-user-id', nil).and_return(strategy)
         allow(strategy).to receive(:run).and_return(result)
         allow(result).to receive(:limit_exceeded?).and_return(limit_exceeded)
         allow(result).to receive(:time_left)
 
-        FakeController.class_eval { rate_limit(&:time_left) }
+        FakeController.class_eval do
+          rate_limit limit: 123, per: 56.minutes, pattern: -> { current_user_id } do |info|
+            render json: info.time_left
+          end
+        end
         get :test
       end
 
