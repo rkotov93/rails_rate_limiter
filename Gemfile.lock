@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rails_rate_limiter (0.2.0)
+    rails_rate_limiter (0.2.1)
       rails (>= 4.2)
       redis (>= 3.0)
 

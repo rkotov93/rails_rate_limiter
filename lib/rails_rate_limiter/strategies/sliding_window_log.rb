@@ -12,12 +12,12 @@ module RailsRateLimiter
       #   requests per time period.
       # @param per [Fixnum, Lambda, Proc] :per Time period in seconds.
       # @param requester [Lambda, Proc] Identifies request
-      # @param client [Object] Redis client
+      # @param client [Object, Proc] Redis client
       def initialize(limit, per, requester, client = nil)
         @limit = limit.respond_to?(:call) ? limit.call : limit
         @expires_in = calculate_expires_in(per)
         @requester_pattern = requester
-        @client = client
+        @client = client.is_a?(Proc) ? client.call : client # Redis client already responds to #call so we have to strict
       end
 
       def run
