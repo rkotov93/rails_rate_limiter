@@ -3,6 +3,7 @@ RSpec.shared_examples 'a rate limits sliding window log strategy' do
     let(:result) { double('result') }
     let!(:freezed_time) { Time.zone.now }
     let(:limit) { 1 }
+    let(:client) { redis_mock }
 
     before do
       allow(RailsRateLimiter::Result).to receive(:new).and_return(result)
@@ -56,7 +57,7 @@ RSpec.shared_examples 'a rate limits sliding window log strategy' do
 end
 
 RSpec.describe RailsRateLimiter::Strategies::SlidingWindowLog do
-  subject(:strategy) { described_class.new(limit, 1.hour, requester) }
+  subject(:strategy) { described_class.new(limit, 1.hour, requester, client) }
 
   let(:accuracy) { described_class::TIMESTAMP_ACCURACY }
   let!(:redis_mock) { mock_redis }
@@ -67,16 +68,24 @@ RSpec.describe RailsRateLimiter::Strategies::SlidingWindowLog do
   end
 
   context 'when requester is ip address' do
-    let(:requester) { '127.0.0.1' }
-    let(:cache_key) { "rate_limiter_ip_#{requester}" }
+    let(:requester) { 'ip_127.0.0.1' }
+    let(:cache_key) { "rate_limiter_#{requester}" }
 
     it_behaves_like 'a rate limits sliding window log strategy'
   end
 
   context 'when requester is a custom entity' do
     let(:custom_entity) { Object.new }
-    let(:requester) { Proc.new { custom_entity.object_id } }
+    let(:requester) { "custom_#{custom_entity.object_id}" }
     let(:cache_key) { "rate_limiter_custom_#{custom_entity.object_id}" }
+
+    it_behaves_like 'a rate limits sliding window log strategy'
+  end
+
+  context 'when client argument is a lambda' do
+    let(:client) { lambda { redis_mock } }
+    let(:requester) { 'ip_127.0.0.1' }
+    let(:cache_key) { "rate_limiter_#{requester}" }
 
     it_behaves_like 'a rate limits sliding window log strategy'
   end
