@@ -13,6 +13,7 @@ module Rails
       @routes = ActionDispatch::Routing::RouteSet.new
       @routes.draw do
         get 'test' => 'fake#test'
+        get 'test_limit_proc' => 'fake_limit_proc#test'
       end
       @routes
     end
